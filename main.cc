@@ -5,33 +5,30 @@
 #include "vector.h"
 
 int main() {
-  TensorShape<2> shape;
-  shape.dims_[0] = 2;
-  shape.dims_[1] = 2;
-
-  TensorShape<1> vector_shape;
-  vector_shape.dims_[0] = 3;
-
-  Tensor<2, int> tensor(shape);
-  tensor.print();
-
-  IntVector vector(vector_shape);
-  vector.buf_[0] = 3;
-  vector.print();
-
-  IntVector vector2(vector_shape);
-  vector2.buf_[0] = 1;
-  vector.print();
-
-  IntVector result_vector = AddIntVector(vector, vector2);
-  result_vector.print();
-
-  DoubleMatrix matrix(shape, 1);
+  // Initialize matrix.
+  TensorShape<2> shape{2, 2};
+  DoubleMatrix matrix(shape, [](size_t x, size_t y) { return x + y; });
   matrix.print();
 
-  TensorView<2, double> view(matrix.shape_.dims_, matrix.buf_);
+  // Use TensorView to get random access to elements.
+  TensorView<2, double> view(matrix.shape_.dim, matrix.buf_);
   view[0][1] = 3;
-  std::cout << view[0][0] << std::endl;
+  std::cout << "View: " << view[0][0] << ' ' << (view[1][0] == view[1][1])
+            << std::endl;
   matrix.print();
+
+  // Try higher dimension!
+  TensorShape<3> cubic_shape{3, 3, 3};
+  Tensor<3, double> cubic(cubic_shape);
+  Tensor<3, double>::view_type cubic_view(cubic.shape_.dim, cubic.buf_);
+  cubic.print();
+  for (int i = 0; i < 3; i++) {
+    for (int j = 0; j < 3; j++) {
+      for (int k = 0; k < 3; k++) {
+        cubic_view[i][j][k] = i * 9 + j * 3 + k;
+      }
+    }
+  }
+  cubic.print();
   return 0;
 }

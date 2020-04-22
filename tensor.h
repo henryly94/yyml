@@ -4,27 +4,23 @@
 #include <iostream>
 
 template <size_t N>
-class TensorShape {
- public:
-  size_t dims_[N];
-
-  bool IsSameShape(const TensorShape<N> &other_shape) {
-    for (size_t i = 0; i < N; i++) {
-      if (dims_[i] != other_shape.dims_[i]) return false;
-    }
-    return true;
-  }
+struct TensorShape {
+  size_t dim[N];
 };
+
+template <size_t N, typename Type>
+struct TensorView;
 
 template <size_t N, typename Type>
 class Tensor {
  public:
   using shape_type = TensorShape<N>;
+  using view_type = TensorView<N, Type>;
 
   Tensor(const shape_type &shape) : shape_(shape) {
     total_ = 1;
     for (size_t i = 0; i < N; i++) {
-      total_ *= shape_.dims_[i];
+      total_ *= shape_.dim[i];
     }
     buf_ = new Type[total_];
   }
