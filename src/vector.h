@@ -32,5 +32,6 @@ template <typename Type>
 using Vector = typename detail::VectorTypedef<Type>::type;
 
 using IntVector = Vector<int>;
+using DoubleVector = Vector<double>;
 
 #endif  // VECTOR_H

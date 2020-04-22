@@ -30,5 +30,17 @@ int main() {
     }
   }
   cubic.print();
+
+  // Math
+  std::cout << "Math\n==============\n";
+  TensorShape<1> vector_shape{2};
+  DoubleMatrix src_matrix(shape, [](size_t x, size_t y) { return x + 2 * y; });
+  DoubleVector src_vector(vector_shape), dst_vector(vector_shape);
+  src_vector.buf_[0] = 1;
+  src_vector.buf_[1] = 2;
+  src_matrix.print();
+  src_vector.print();
+  MatrixMultiplyVector<double>(src_matrix, src_vector, &dst_vector);
+  dst_vector.print();
   return 0;
 }
