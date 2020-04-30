@@ -1,30 +1,27 @@
 #ifndef VARIABLE_H
 #define VARIABLE_H
 
-#include <functional>
-#include <initializer_list>
-#include <numeric>
-#include <vector>
-
-struct VariableShape {
-  VariableShape(std::initializer_list<size_t> dims)
-      : dim(dims.size()),
-        dims(dims),
-        total(std::accumulate(dims.begin(), dims.end(), 1,
-                              std::multiplies<size_t>())) {}
-  size_t dim;
-  size_t total;
-  std::vector<size_t> dims;
-};
+#include "autograd.h"
+#include "tensor.h"
 
 template <typename Type>
-struct Variable {
-  Variable(VariableShape shape) : shape(shape), data(new Type[shape.total]) {}
-  ~Variable() { delete[] data; }
-  Type* data;
-  VariableShape shape;
-};
+class Variable {
+ public:
+  Variable(TensorShape shape)
+      : values_(shape), grads_(shape), autograd_({}, &grads_, nullptr) {}
 
-using DoubleVariable = Variable<double>;
+  Variable(TensorShape shape, BackwardFunction<Type> backward_fn,
+           std::initializer_list<Autograd<Type>*> l)
+      : values_(shape), grads_(shape), autograd_(l, &grads_, backward_fn) {}
+
+  friend std::ostream& operator<<(std::ostream& os, const Variable& v) {
+    os << "Value: " << v.values_ << "\nGrad: " << v.grads_;
+    return os;
+  }
+
+  Tensor<Type> values_;
+  Tensor<Type> grads_;
+  Autograd<Type> autograd_;
+};
 
 #endif  // VARIABLE_H
