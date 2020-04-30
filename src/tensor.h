@@ -58,7 +58,7 @@ class Tensor {
     return *this;
   }
 
-  TensorShape shape() const { return shape_; }
+  const TensorShape& shape() const { return shape_; }
   size_t total() const { return shape_.total; }
 
   // Generate a non-template operator<< for the Tensor.
