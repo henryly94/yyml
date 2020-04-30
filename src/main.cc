@@ -10,7 +10,8 @@ int main() {
   auto vab_c = Substract<double>(va_b, vc);
   auto va_abc = Add<double>(va, vab_c);
   auto va_a_abc = Substract<double>(va_abc, va);
+  auto mean = Mean<double>(va_a_abc);
   std::cout << va << '\n' << vb << '\n' << vc << std::endl;
-  Backward<double>(va_a_abc);
+  Backward<double>(mean);
   std::cout << va << '\n' << vb << '\n' << vc << std::endl;
 }
