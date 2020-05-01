@@ -22,8 +22,11 @@ struct TensorShape {
 template <typename Type>
 class Tensor {
  public:
-  Tensor(TensorShape shape) : shape_(shape), data_(new Type[shape.total]) {}
-  ~Tensor() { delete[] data_; }
+  Tensor(TensorShape shape) : shape_(shape), data_(new Type[shape.total]{0}) {}
+  ~Tensor() {
+    delete[] data_;
+    data_ = nullptr;
+  }
 
   Tensor(const Tensor<Type>& other)
       : shape_(other.shape_), data_(new Type[shape_.total]) {
