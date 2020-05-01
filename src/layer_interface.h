@@ -6,6 +6,8 @@
 class LayerInterface {
  public:
   virtual Variable<double>* operator()(Variable<double>* input) = 0;
+
+  virtual void print() = 0;
 };
 
 #endif  // LAYER_INTERFACE_H

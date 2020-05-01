@@ -87,9 +87,6 @@ void MMBackward(Variable<Type>* va, Variable<Type>* vb,
                 Variable<Type>* result) {
   size_t m = va->grads_.shape().dims[0], n = vb->grads_.shape().dims[1],
          p = va->grads_.shape().dims[1];
-  std::cout << "VA: " << va << std::endl;
-  std::cout << "VB: " << vb << std::endl;
-  std::cout << "Result: " << result << std::endl;
   for (size_t i = 0; i < m; i++) {
     for (size_t k = 0; k < p; k++) {
       for (size_t j = 0; j < n; j++) {
@@ -100,9 +97,6 @@ void MMBackward(Variable<Type>* va, Variable<Type>* vb,
       }
     }
   }
-  std::cout << "VA: " << va << std::endl;
-  std::cout << "VB: " << vb << std::endl;
-  std::cout << "Result: " << result << std::endl;
   Variable<Type>::factory::RemoveInstance(result);
 }
 
@@ -167,14 +161,12 @@ void Backward(Variable<Type>* v) {
   std::deque<Autograd<Type>*> bfs;
   bfs.push_back(&(v->autograd_));
   while (!bfs.empty()) {
-    std::cout << "i\n";
     auto* autograd = bfs.front();
     bfs.pop_front();
     for (auto* next : autograd->next) {
       bfs.push_back(next);
     }
     if (autograd->backward_fn != nullptr) {
-      std::cout << "f\n";
       autograd->backward_fn();
     }
   }
