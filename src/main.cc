@@ -22,13 +22,29 @@ class MyNN : public NN {
 };
 
 int main() {
-  MyNN mynn;
-  TensorShape input_shape{1, 20};
-  Variable<double> nn_input(input_shape);
-  auto* nn_output = mynn(&nn_input);
-  mynn.print();
-  std::cout << nn_input << '\n' << nn_output << '\n';
-  Backward<double>(nn_output);
-  std::cout << nn_input << '\n';
-  mynn.print();
+  TensorShape shape{2, 2};
+  Variable<double> a(shape), b(shape);
+  a.values_.data_[0] = 1;
+  a.values_.data_[1] = 2;
+  a.values_.data_[2] = 3;
+  a.values_.data_[3] = 4;
+  b.values_.data_[0] = 1;
+  b.values_.data_[1] = 2;
+  b.values_.data_[2] = -3;
+  b.values_.data_[3] = 4;
+  auto* c = MM<double>(&a, &b);
+  auto* d = ReLU<double>(c);
+  std::cout << c << '\n' << d << std::endl;
+  Backward<double>(d);
+  std::cout << a << '\n' << b << std::endl;
+
+  // MyNN mynn;
+  // TensorShape input_shape{1, 20};
+  // Variable<double> nn_input(input_shape);
+  // auto* nn_output = mynn(&nn_input);
+  // mynn.print();
+  // std::cout << nn_input << '\n' << nn_output << '\n';
+  // Backward<double>(nn_output);
+  // std::cout << nn_input << '\n';
+  // mynn.print();
 }

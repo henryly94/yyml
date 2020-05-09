@@ -127,6 +127,30 @@ Variable<Type>* MM(Variable<Type>* va, Variable<Type>* vb) {
 }
 
 template <typename Type>
+void ReLUBackward(Variable<Type>* v, Variable<Type>* result) {
+  for (size_t i = 0; i < v->values_.total(); i++) {
+    v->grads_.data_[i] = v->values_.data_[i] >= 0 ? result->grads_.data_[i] : 0;
+  }
+}
+
+template <typename Type>
+void ReLU(Variable<Type>* v, Variable<Type>* result) {
+  result->autograd_.backward_fn = std::bind(ReLUBackward<Type>, v, result);
+  result->autograd_.next = {&v->autograd_};
+  for (size_t i = 0; i < v->values_.total(); i++) {
+    result->values_.data_[i] =
+        v->values_.data_[i] >= 0 ? v->values_.data_[i] : 0;
+  }
+}
+
+template <typename Type>
+Variable<Type>* ReLU(Variable<Type>* v) {
+  auto* result = Variable<Type>::factory::GetNewInstance(v->values_.shape_);
+  ReLU(v, result);
+  return result;
+}
+
+template <typename Type>
 void MeanBackward(Variable<Type>* v, Variable<Type>* result) {
   Type total = v->grads_.total();
   for (size_t i = 0; i < v->grads_.total(); i++) {
