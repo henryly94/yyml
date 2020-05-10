@@ -1,6 +1,7 @@
 #ifndef DENSE_LAYER_H
 #define DENSE_LAYER_H
 
+#include <vector>
 #include "factory.h"
 #include "layer_interface.h"
 #include "op.h"
@@ -16,6 +17,10 @@ class DenseLayer : public LayerInterface {
     auto* product = MM<double>(input, &weight_);
     auto* out = Add<double>(product, &bias_);
     return out;
+  }
+
+  std::vector<Variable<double>*> Parameters() override {
+    return {&weight_, &bias_};
   }
 
   void print() override {
