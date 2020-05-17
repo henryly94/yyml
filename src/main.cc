@@ -3,6 +3,7 @@
 #include <string_view>
 #include <utility>
 #include <vector>
+#include "data_loader.h"
 #include "dense_layer.h"
 #include "function.h"
 #include "nn.h"
@@ -41,20 +42,6 @@ Variable<double>* LossFunc(Variable<double>* output, Variable<double>* label) {
   return Multiply<double>(diff, diff);
 }
 
-std::vector<std::pair<double, double>> GetInput(std::string_view data_path) {
-  std::ifstream in(data_path.data());
-  if (in.is_open()) {
-    std::cout << "Is Opened!\n";
-  }
-  std::vector<std::pair<double, double>> pairs;
-  double x, y;
-  while (in >> x >> y) {
-    pairs.emplace_back(x, y);
-  }
-  in.close();
-  return pairs;
-}
-
 void OutputResult(const std::vector<std::pair<double, double>>& x_and_ys) {
   std::ofstream out("result.txt");
   for (const auto& [x, y] : x_and_ys) {
@@ -67,27 +54,16 @@ int main() {
   MyNN mynn;
   SGDOptimizer optimizer(mynn.Parameters(), 0.001);
   TensorShape input_shape{1, 1}, output_shape{1, 1};
-  Variable<double> nn_input(input_shape), label(output_shape);
 
-  auto pairs = GetInput("data.txt");
+  DataLoader dataloader("data.txt", input_shape, output_shape);
   optimizer.Apply(RandomNumberGenerator::NormalDistribution);
 
   for (int i = 0; i < 200; i++) {
     double iter_loss = 0;
-    for (int j = 0; j < pairs.size(); j++) {
-      auto& x_and_y = pairs[j];
-      nn_input.values_.data_[0] = x_and_y.first;
-      nn_input.grads_.data_[0] = 0;
-      label.values_.data_[0] = x_and_y.second;
-      label.grads_.data_[0] = 0;
-      // std::cout << "nn_input:" << nn_input << std::endl;
-      // std::cout << "label:" << label << std::endl;
-
+    for (auto& [nn_input, label] : dataloader) {
       optimizer.ZeroGrad();
       auto* nn_output = mynn(&nn_input);
-      // std::cout << "Output: " << nn_output << std::endl;
       auto* loss = LossFunc(nn_output, &label);
-      // std::cout << "Loss:" << loss << std::endl;
       iter_loss += loss->values_.data_[0];
       loss->Backward();
       optimizer.Step();
@@ -95,10 +71,10 @@ int main() {
     std::cout << iter_loss << std::endl;
   }
   std::vector<std::pair<double, double>> x_and_ys;
-  for (auto& [x, y] : pairs) {
-    nn_input.values_.data_[0] = x;
+  for (auto& [nn_input, _] : dataloader) {
     auto* nn_output = mynn(&nn_input);
-    x_and_ys.emplace_back(x, nn_output->values_.data_[0]);
+    x_and_ys.emplace_back(nn_input.values_.data_[0],
+                          nn_output->values_.data_[0]);
   }
   OutputResult(x_and_ys);
 }
