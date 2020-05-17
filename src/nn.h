@@ -35,8 +35,8 @@ class NN {
  protected:
   template <typename... Params>
   void SetLayer(std::string_view name, Params&... params) {
-    auto* new_layer =
-        DenseLayer::factory::GetNewInstance(std::forward<Params>(params)...);
+    auto* new_layer = DenseLayer::factory::GetNewInstance(
+        std::forward<Params>(params)..., std::string(name));
     layers_.emplace(std::string(name), new_layer);
   }
 

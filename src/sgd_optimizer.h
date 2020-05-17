@@ -10,10 +10,10 @@ class SGDOptimizer : public OptimizerInterface {
   SGDOptimizer(std::vector<Variable<double>*> parameters, double learning_rate)
       : OptimizerInterface(parameters), learning_rate_(learning_rate) {}
 
-  void step() override {
+  void Step() override {
     for (auto* parameter : parameters_) {
       for (size_t i = 0; i < parameter->values_.total(); i++) {
-        parameter->values_.data_[i] +=
+        parameter->values_.data_[i] -=
             learning_rate_ * parameter->grads_.data_[i];
       }
     }

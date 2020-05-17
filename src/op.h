@@ -4,6 +4,7 @@
 #include <deque>
 #include <functional>
 #include <iostream>
+#include <unordered_set>
 #include "autograd.h"
 #include "tensor.h"
 #include "variable.h"
@@ -79,6 +80,33 @@ template <typename Type>
 Variable<Type>* Substract(Variable<Type>* va, Variable<Type>* vb) {
   auto* result = Variable<Type>::factory::GetNewInstance(va->values_.shape_);
   Substract(va, vb, result);
+  return result;
+}
+
+template <typename Type>
+void MultiplyBackward(Variable<Type>* va, Variable<Type>* vb,
+                      Variable<Type>* result) {
+  for (int i = 0; i < result->grads_.total(); i++) {
+    va->grads_.data_[i] += result->grads_.data_[i] * vb->values_.data_[i];
+    vb->grads_.data_[i] += result->grads_.data_[i] * va->values_.data_[i];
+  }
+  Variable<Type>::factory::RemoveInstance(result);
+}
+
+template <typename Type>
+void Multiply(Variable<Type>* va, Variable<Type>* vb, Variable<Type>* result) {
+  result->autograd_.backward_fn =
+      std::bind(MultiplyBackward<Type>, va, vb, result);
+  result->autograd_.next = {&va->autograd_, &vb->autograd_};
+  for (size_t i = 0; i < va->values_.total(); i++) {
+    result->values_.data_[i] = va->values_.data_[i] * vb->values_.data_[i];
+  }
+}
+
+template <typename Type>
+Variable<Type>* Multiply(Variable<Type>* va, Variable<Type>* vb) {
+  auto* result = Variable<Type>::factory::GetNewInstance(va->values_.shape_);
+  Multiply(va, vb, result);
   return result;
 }
 
@@ -184,9 +212,15 @@ void Backward(Variable<Type>* v) {
   }
   std::deque<Autograd<Type>*> bfs;
   bfs.push_back(&(v->autograd_));
+  std::unordered_set<Autograd<Type>*> has_been;
   while (!bfs.empty()) {
     auto* autograd = bfs.front();
     bfs.pop_front();
+    if (has_been.find(autograd) != has_been.end()) {
+      continue;
+    } else {
+      has_been.insert(autograd);
+    }
     for (auto* next : autograd->next) {
       bfs.push_back(next);
     }
