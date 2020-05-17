@@ -30,17 +30,17 @@ class Tensor {
 
   Tensor(const Tensor<Type>& other)
       : shape_(other.shape_), data_(new Type[shape_.total]) {
-    std::cout << "copy ctor\n";
+    // std::cout << "copy ctor\n";
     std::copy(other.data_, other.data_ + shape_.total, data_);
   }
 
   Tensor(Tensor<Type>&& other) : shape_(other.shape_), data_(other.data_) {
-    std::cout << "move ctor\n";
+    // std::cout << "move ctor\n";
     other.data_ = nullptr;
   }
 
   Tensor<Type>& operator=(Tensor<Type>& other) {
-    std::cout << "copy assign\n";
+    // std::cout << "copy assign\n";
     shape_ = other.shape_;
     if (this != &other) {
       delete[] data_;
@@ -51,7 +51,7 @@ class Tensor {
   }
 
   Tensor<Type>& operator=(Tensor<Type>&& other) {
-    std::cout << "move assign\n";
+    // std::cout << "move assign\n";
     shape_ = other.shape_;
     if (this != &other) {
       delete[] data_;
