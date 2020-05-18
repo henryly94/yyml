@@ -22,25 +22,31 @@ struct TensorShape {
 template <typename Type>
 class Tensor {
  public:
-  Tensor(TensorShape shape) : shape_(shape), data_(new Type[shape.total]{0}) {}
+  Tensor(TensorShape shape) : shape_(shape), data_(new Type[shape.total]{0}) {
+    created_++;
+  }
   ~Tensor() {
     delete[] data_;
     data_ = nullptr;
+    destroyed_++;
   }
 
   Tensor(const Tensor<Type>& other)
       : shape_(other.shape_), data_(new Type[shape_.total]) {
     // std::cout << "copy ctor\n";
+    copied_++;
     std::copy(other.data_, other.data_ + shape_.total, data_);
   }
 
   Tensor(Tensor<Type>&& other) : shape_(other.shape_), data_(other.data_) {
     // std::cout << "move ctor\n";
+    moved_++;
     other.data_ = nullptr;
   }
 
   Tensor<Type>& operator=(Tensor<Type>& other) {
     // std::cout << "copy assign\n";
+    copied_++;
     shape_ = other.shape_;
     if (this != &other) {
       delete[] data_;
@@ -52,6 +58,7 @@ class Tensor {
 
   Tensor<Type>& operator=(Tensor<Type>&& other) {
     // std::cout << "move assign\n";
+    moved_++;
     shape_ = other.shape_;
     if (this != &other) {
       delete[] data_;
@@ -76,6 +83,18 @@ class Tensor {
 
   TensorShape shape_;
   Type* data_;
+  static size_t created_;
+  static size_t copied_;
+  static size_t moved_;
+  static size_t destroyed_;
 };
+template <>
+size_t Tensor<double>::created_ = 0;
+template <>
+size_t Tensor<double>::copied_ = 0;
+template <>
+size_t Tensor<double>::moved_ = 0;
+template <>
+size_t Tensor<double>::destroyed_ = 0;
 
 #endif  // TENSOR_H
