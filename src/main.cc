@@ -72,6 +72,11 @@ int main() {
         loss->Backward();
         optimizer.Step();
       }
+      std::cout << "TensorCreated: " << Tensor<double>::created_ << std::endl;
+      std::cout << "TensorCopied: " << Tensor<double>::copied_ << std::endl;
+      std::cout << "TensorMoved: " << Tensor<double>::moved_ << std::endl;
+      std::cout << "TensorDestroyed: " << Tensor<double>::destroyed_
+                << std::endl;
       std::cout << "Loss: " << iter_loss << std::endl;
     }
     std::vector<std::vector<double>> x_and_ys;

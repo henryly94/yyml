@@ -154,11 +154,17 @@ Variable<Type>* MM(Variable<Type>* va, Variable<Type>* vb) {
   return result;
 }
 
+// template <Type>
+// Variable<Type>* Conv2D(Variable<Type>* input, Variable<Type>* kernel) {
+//
+//}
+
 template <typename Type>
 void ReLUBackward(Variable<Type>* v, Variable<Type>* result) {
   for (size_t i = 0; i < v->values_.total(); i++) {
     v->grads_.data_[i] = v->values_.data_[i] >= 0 ? result->grads_.data_[i] : 0;
   }
+  Variable<Type>::factory::RemoveInstance(result);
 }
 
 template <typename Type>
