@@ -3,3 +3,8 @@ add_executable(
   main.cc
   function.cc
 )
+
+add_executable(
+  conv_main
+  conv_main.cc
+)
