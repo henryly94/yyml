@@ -1,10 +1,5 @@
-add_executable(
-  main
-  main.cc
-  function.cc
-)
+set(CMAKE_PROJECT_BASE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
-add_executable(
-  conv_main
-  conv_main.cc
-)
+add_subdirectory(util)
+
+add_subdirectory(example)

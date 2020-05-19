@@ -2,7 +2,10 @@
 #define LAYER_INTERFACE_H
 
 #include <vector>
-#include "variable.h"
+#include "nn/variable.h"
+
+namespace yyml {
+namespace nn {
 
 class LayerInterface {
  public:
@@ -12,5 +15,8 @@ class LayerInterface {
 
   virtual void print() = 0;
 };
+
+}  // namespace nn
+}  // namespace yyml
 
 #endif  // LAYER_INTERFACE_H

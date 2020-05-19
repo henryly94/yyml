@@ -4,6 +4,9 @@
 #include <functional>
 #include <vector>
 
+namespace yyml {
+namespace nn {
+
 template <typename Type>
 using BackwardFunction = std::function<void()>;
 
@@ -19,5 +22,8 @@ struct Autograd {
   Variable<Type>* variable_ptr;
   BackwardFunction<Type> backward_fn;
 };
+
+}  // namespace nn
+}  // namespace yyml
 
 #endif  // AUTOGRAD_H

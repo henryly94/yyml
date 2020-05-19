@@ -1,0 +1,9 @@
+add_library(
+  function
+  function.cc
+)
+add_library(
+  util::function
+  ALIAS
+  function
+)

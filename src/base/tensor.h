@@ -8,6 +8,8 @@
 #include <numeric>
 #include <vector>
 
+namespace yyml {
+
 struct TensorShape {
   TensorShape(std::initializer_list<size_t> dims)
       : dim(dims.size()),
@@ -88,6 +90,8 @@ class Tensor {
   static size_t moved_;
   static size_t destroyed_;
 };
+
+// Some static counter for testing.
 template <>
 size_t Tensor<double>::created_ = 0;
 template <>
@@ -96,5 +100,7 @@ template <>
 size_t Tensor<double>::moved_ = 0;
 template <>
 size_t Tensor<double>::destroyed_ = 0;
+
+}  // namespace yyml
 
 #endif  // TENSOR_H
