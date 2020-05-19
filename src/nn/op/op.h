@@ -5,9 +5,12 @@
 #include <functional>
 #include <iostream>
 #include <unordered_set>
-#include "autograd.h"
-#include "tensor.h"
-#include "variable.h"
+#include "base/tensor.h"
+#include "nn/autograd.h"
+#include "nn/variable.h"
+
+namespace yyml {
+namespace nn {
 
 template <typename Type>
 Tensor<Type> Add(Tensor<Type>& va, Tensor<Type>& vb) {
@@ -315,5 +318,8 @@ void Backward(Variable<Type>* v) {
     }
   }
 }
+
+}  // namespace nn
+}  // namespace yyml
 
 #endif  // OP_H

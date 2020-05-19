@@ -7,6 +7,8 @@
 #include <unordered_set>
 #include <utility>
 
+namespace yyml {
+
 namespace detail {
 
 template <typename Type>
@@ -58,5 +60,7 @@ class Factory {
     return _;
   }
 };
+
+}  // namespace yyml
 
 #endif  // FACTORY_H

@@ -2,8 +2,11 @@
 #define SGD_OPTIMIZER_H
 
 #include <vector>
-#include "optimizer_interface.h"
-#include "variable.h"
+#include "nn/optimizer/optimizer_interface.h"
+#include "nn/variable.h"
+
+namespace yyml {
+namespace nn {
 
 class SGDOptimizer : public OptimizerInterface {
  public:
@@ -22,5 +25,8 @@ class SGDOptimizer : public OptimizerInterface {
  private:
   double learning_rate_;
 };
+
+}  // namespace nn
+}  // namespace yyml
 
 #endif  // SGD_OPTIMIZER_H

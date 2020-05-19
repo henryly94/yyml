@@ -2,9 +2,12 @@
 #define VARIABLE_H
 
 #include <string>
-#include "autograd.h"
-#include "factory.h"
-#include "tensor.h"
+#include "base/factory.h"
+#include "base/tensor.h"
+#include "nn/autograd.h"
+
+namespace yyml {
+namespace nn {
 
 template <typename Type>
 void Backward(Variable<Type>* v);
@@ -32,7 +35,7 @@ class Variable {
         autograd_(l, this, backward_fn),
         name_("") {}
 
-  void Backward() { ::Backward<Type>(this); }
+  void Backward() { ::yyml::nn::Backward<Type>(this); }
 
   friend std::ostream& operator<<(std::ostream& os, const Variable& v) {
     os << "Name: " << v.name_ << "\nValue: " << v.values_
@@ -49,5 +52,8 @@ class Variable {
   Autograd<Type> autograd_;
   std::string name_;
 };
+
+}  // namespace nn
+}  // namespace yyml
 
 #endif  // VARIABLE_H

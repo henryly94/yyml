@@ -4,8 +4,11 @@
 #include <string_view>
 #include <unordered_map>
 #include <utility>
-#include "dense_layer.h"
-#include "variable.h"
+#include "nn/layer/dense_layer.h"
+#include "nn/variable.h"
+
+namespace yyml {
+namespace nn {
 
 class NN {
  public:
@@ -52,5 +55,8 @@ class NN {
  private:
   std::unordered_map<std::string, LayerInterface*> layers_;
 };
+
+}  // namespace nn
+}  // namespace yyml
 
 #endif  // NN_H

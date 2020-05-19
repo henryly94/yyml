@@ -3,10 +3,13 @@
 
 #include <string>
 #include <vector>
-#include "factory.h"
-#include "layer_interface.h"
-#include "op.h"
-#include "variable.h"
+#include "base/factory.h"
+#include "nn/layer/layer_interface.h"
+#include "nn/op/op.h"
+#include "nn/variable.h"
+
+namespace yyml {
+namespace nn {
 
 class DenseLayer : public LayerInterface {
  public:
@@ -37,5 +40,8 @@ class DenseLayer : public LayerInterface {
   Variable<double> bias_;
   std::string name_;
 };
+
+}  // namespace nn
+}  // namespace yyml
 
 #endif  // DENSE_LAYER_H

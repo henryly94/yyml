@@ -2,7 +2,10 @@
 #define OPTIMIZER_INTERFACE_H
 
 #include <functional>
-#include "variable.h"
+#include "nn/variable.h"
+
+namespace yyml {
+namespace nn {
 
 class OptimizerInterface {
  public:
@@ -30,5 +33,8 @@ class OptimizerInterface {
  protected:
   std::vector<Variable<double>*> parameters_;
 };
+
+}  // namespace nn
+}  // namespace yyml
 
 #endif  // OPTIMIZER_INTERFACE_H

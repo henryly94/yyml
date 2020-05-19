@@ -7,8 +7,12 @@
 #include <string_view>
 #include <tuple>
 #include <utility>
-#include "tensor.h"
-#include "variable.h"
+#include "base/tensor.h"
+#include "nn/variable.h"
+
+namespace yyml {
+
+using nn::Variable;
 
 class DataLoader {
  public:
@@ -53,5 +57,7 @@ class DataLoader {
 
   container_type data_;
 };
+
+}  // namespace yyml
 
 #endif  // DATA_LOADER_H
