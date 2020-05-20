@@ -2,7 +2,6 @@
 #define NN_H
 
 #include <string_view>
-#include <tuple>
 #include <unordered_map>
 #include <utility>
 #include "nn/layer/conv2d_layer.h"
@@ -11,9 +10,6 @@
 
 namespace yyml {
 namespace nn {
-
-constexpr const char* kDenseLayer = "dense";
-constexpr const char* kConv2DLayer = "conv2d";
 
 class NN {
  public:
@@ -59,7 +55,7 @@ class NN {
 
  private:
   std::unordered_map<std::string, LayerInterface*> layers_;
-};  // namespace nn
+};
 
 }  // namespace nn
 }  // namespace yyml
