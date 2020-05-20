@@ -2,13 +2,18 @@
 #define NN_H
 
 #include <string_view>
+#include <tuple>
 #include <unordered_map>
 #include <utility>
+#include "nn/layer/conv2d_layer.h"
 #include "nn/layer/dense_layer.h"
 #include "nn/variable.h"
 
 namespace yyml {
 namespace nn {
+
+constexpr const char* kDenseLayer = "dense";
+constexpr const char* kConv2DLayer = "conv2d";
 
 class NN {
  public:
@@ -36,9 +41,9 @@ class NN {
   }
 
  protected:
-  template <typename... Params>
-  void SetLayer(std::string_view name, Params&... params) {
-    auto* new_layer = DenseLayer::factory::GetNewInstance(
+  template <typename LayerType, typename... Params>
+  void SetLayer(std::string_view name, Params... params) {
+    auto* new_layer = LayerType::factory::GetNewInstance(
         std::forward<Params>(params)..., std::string(name));
     layers_.emplace(std::string(name), new_layer);
   }
@@ -54,7 +59,7 @@ class NN {
 
  private:
   std::unordered_map<std::string, LayerInterface*> layers_;
-};
+};  // namespace nn
 
 }  // namespace nn
 }  // namespace yyml

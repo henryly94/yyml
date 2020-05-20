@@ -17,6 +17,7 @@ using yyml::DataLoader;
 using yyml::RandomNumberGenerator;
 using yyml::Tensor;
 using yyml::TensorShape;
+using yyml::nn::DenseLayer;
 using yyml::nn::Multiply;
 using yyml::nn::NN;
 using yyml::nn::ReLU;
@@ -31,10 +32,10 @@ class MyNN : public NN {
     TensorShape w_shape2{16, 32}, b_shape2{1, 32};
     TensorShape w_shape3{32, 16}, b_shape3{1, 16};
     TensorShape w_shape4{16, 1}, b_shape4{1, 1};
-    SetLayer("dense1", w_shape1, b_shape1);
-    SetLayer("dense2", w_shape2, b_shape2);
-    SetLayer("dense3", w_shape3, b_shape3);
-    SetLayer("dense4", w_shape4, b_shape4);
+    SetLayer<DenseLayer>("dense1", w_shape1, b_shape1);
+    SetLayer<DenseLayer>("dense2", w_shape2, b_shape2);
+    SetLayer<DenseLayer>("dense3", w_shape3, b_shape3);
+    SetLayer<DenseLayer>("dense4", w_shape4, b_shape4);
   }
 
   Variable<double>* Forward(Variable<double>* input) override {

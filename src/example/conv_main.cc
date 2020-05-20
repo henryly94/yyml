@@ -4,6 +4,7 @@
 #include <utility>
 #include <vector>
 #include "base/tensor.h"
+#include "nn/layer/conv2d_layer.h"
 #include "nn/layer/dense_layer.h"
 #include "nn/nn.h"
 #include "nn/op/op.h"
@@ -14,7 +15,22 @@
 
 using yyml::TensorShape;
 using yyml::nn::Conv2D;
+using yyml::nn::Conv2DLayer;
+using yyml::nn::NN;
 using yyml::nn::Variable;
+
+class MyNN : public NN {
+ public:
+  MyNN() {
+    TensorShape kernel_shape{3, 3};
+    SetLayer<Conv2DLayer>("conv2d1", kernel_shape);
+  }
+
+  Variable<double>* Forward(Variable<double>* input) override {
+    auto* o1 = GetLayer("conv2d1")(input);
+    return o1;
+  }
+};
 
 int main() {
   TensorShape input_shape{3, 3}, kernel_shape{2, 2};
